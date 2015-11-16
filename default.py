@@ -299,11 +299,12 @@ class Main:
             shouldRun = dialog.yesno( __language__( 32037 ), __language__( 32038 ) )
         
         if shouldRun:
+            isShared = DATA.checkIfMenusShared()
             for files in xbmcvfs.listdir( __datapath__ ):
                 # Try deleting all shortcuts
                 if files:
                     for file in files:
-                        if file != "settings.xml":
+                        if file != "settings.xml" and ( isShared == False or file.startswith( "%s-" %( xbmc.getSkinPath() ) ) ) or file == "%s.properties" %( xbmc.getSkinPath() ):
                             file_path = os.path.join( __datapath__, file.decode( 'utf-8' ) ).encode( 'utf-8' )
                             if xbmcvfs.exists( file_path ):
                                 try:

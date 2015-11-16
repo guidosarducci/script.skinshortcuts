@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
-	<category label="Debugging">
+	<category label="Settings">
+		<setting label="Share menu between compatible skins" type="bool" id="shared_menu" default="true"/>
 		<setting label="Enable debug logging" type="bool" id="enable_logging" default="false"/>
 	</category>
 </settings>

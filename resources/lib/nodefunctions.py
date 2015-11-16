@@ -357,7 +357,7 @@ class NodeFunctions():
                     xmltree.SubElement( newelement, "action" ).text = "ActivateWindow(10502," + item[ "file" ] + ",return)"
                 
             DATA.indent( menuitems.getroot() )
-            path = xbmc.translatePath( os.path.join( "special://profile", "addon_data", __addonid__, DATA.slugify( labelID ) + ".DATA.xml" ).encode('utf-8') )
+            path = xbmc.translatePath( os.path.join( "special://profile", "addon_data", __addonid__, DATA.slugify( labelID, True ) + ".DATA.xml" ).encode('utf-8') )
             menuitems.write( path, encoding="UTF-8" )
         
         # Mark that the menu needs to be rebuilt

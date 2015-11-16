@@ -9,6 +9,7 @@ script.skinshortcuts was written with the intention of making user customizable 
 
 - Ability to match multiple values when setting a property in a template - [Read More](./resources/docs/advanced/Templates.md#set-a-property-based-on-the-value-of-a-main-menu-item)
 - Ability to specify an 'onback' value for specific controls in management dialog - [Read More](./resources/docs/started/Management Dialog.md#custom-focus-on-back)
+- Option for users to specific that their menus should NOT be shared amongst skins
 
 #### Version 1.0.0 - previous repo version
 

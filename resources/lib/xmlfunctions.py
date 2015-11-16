@@ -164,6 +164,9 @@ class XMLFunctions():
                 return True
         except:
             pass
+
+        # Save the shared menu state to a skin string (used by helper service backup)
+        xbmc.executebuiltin("SkinSetString(skinshortcuts-sharedmenu,%s)" %( __addon__.getSetting( "shared_menu" ) ) )
             
         # Get the skins addon.xml file
         addonpath = xbmc.translatePath( os.path.join( "special://skin/", 'addon.xml').encode("utf-8") ).decode("utf-8")
@@ -206,6 +209,7 @@ class XMLFunctions():
         checkedSkinVer = False
         checkedScriptVer = False
         checkedProfileList = False
+        checkedSharedMenu = False
             
         for hash in hashes:
             if hash[1] is not None:
@@ -238,6 +242,12 @@ class XMLFunctions():
                     if xbmc.getCondVisibility( "Library.HasContent(Music)" ) != hash[1]:
                         log( "Whether there is music in the library has changed" )
                         return True
+                elif hash[0] == "::SHARED::":
+                    # Check whether shared-menu setting has changed
+                    checkedSharedMenu = True
+                    if __addon__.getSetting( "shared_menu" ) != hash[1]:
+                        log( "Shared menu setting has changed" )
+                        return True
                 elif hash[0] == "::LANGUAGE::":
                     # We no longer need to rebuild on a system language change
                     pass
@@ -248,6 +258,9 @@ class XMLFunctions():
                             xbmc.executebuiltin( "Skin.SetBool(%s)" %( hash[ 1 ][ 1 ] ) )
                         else:
                             xbmc.executebuiltin( "Skin.Reset(%s)" %( hash[ 1 ][ 1 ] ) )
+                elif hash[0] == "::FULLMENU::" or hash[0] == "::SKINDIR::":
+                    # Used to import menus from one skin to another, nothing to check here
+                    pass
                 else:
                     try:
                         hasher = hashlib.md5()
@@ -266,7 +279,7 @@ class XMLFunctions():
                 
         # If the skin or script version, or profile list, haven't been checked, we need to rebuild the menu 
         # (most likely we're running an old version of the script)
-        if checkedXBMCVer == False or checkedSkinVer == False or checkedScriptVer == False or checkedProfileList == False:
+        if checkedXBMCVer == False or checkedSkinVer == False or checkedScriptVer == False or checkedProfileList == False or checkedSharedMenu == False:
             return True
         
             
@@ -282,6 +295,7 @@ class XMLFunctions():
         hashlist.list.append( ["::XBMCVER::", __xbmcversion__] )
         if int( __xbmcversion__ ) <= 15:
             hashlist.list.append( ["::MUSICCONTENT::", xbmc.getCondVisibility( "Library.HasContent(Music)" ) ] )
+        hashlist.list.append( ["::SHARED::", __addon__.getSetting( "shared_menu" )] )
         
         # Clear any skin settings for backgrounds and widgets
         DATA._reset_backgroundandwidgets()
@@ -358,12 +372,14 @@ class XMLFunctions():
             if groups == "" or groups.split( "|" )[0] == "mainmenu":
                 # Set a skinstring that marks that we're providing the whole menu
                 xbmc.executebuiltin( "Skin.SetBool(SkinShortcuts-FullMenu)" )
+                hashlist.list.append( ["::FULLMENU::", "True"] )
                 for node in DATA._get_shortcuts( "mainmenu", None, True, profile[0] ).findall( "shortcut" ):
                     menuitems.append( node )
                 fullMenu = True
             else:
                 # Clear any skinstring marking that we're providing the whole menu
                 xbmc.executebuiltin( "Skin.Reset(SkinShortcuts-FullMenu)" )
+                hashlist.list.append( ["::FULLMENU::", "False"] )
                     
             # If building specific groups, split them into the menuitems list
             count = 0

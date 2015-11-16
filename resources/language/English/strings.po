@@ -457,3 +457,15 @@ msgstr ""
 msgctxt "#32108"
 msgid "Party mode (music videos)"
 msgstr ""
+
+msgctxt "#32109"
+msgid "No menus from compatible skins found to import"
+msgstr ""
+
+msgctxt "#32110"
+msgid "Import menu from skin"
+msgstr ""
+
+msgctxt "#32111"
+msgid "Shared menu"
+msgstr ""
